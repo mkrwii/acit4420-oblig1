@@ -8,8 +8,10 @@ class Observation:
         self.signal_quality = signal_quality
         
 class Participant:
-    def __init__(self, participant_id, ref_heart_rate, ref_skin_response, ref_temperature, ref_activity_level):
-        self.ref_participant_id = participant_id
+    def __init__(self, participant_id, name, ref_heart_rate, ref_skin_response, ref_temperature, ref_activity_level):
+        print("Creating Participant object with ID:", participant_id)
+        self.participant_id = participant_id
+        self.name = name
         self.ref_heart_rate = ref_heart_rate
         self.ref_skin_response = ref_skin_response
         self.ref_temperature = ref_temperature
