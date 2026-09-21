@@ -6,7 +6,6 @@ class Observation:
         self.temperature = temperature
         self.activity_level = activity_level
         self.signal_quality = signal_quality
-        
 class Participant:
     def __init__(self, participant_id, name, ref_heart_rate, ref_skin_response, ref_temperature, ref_activity_level):
         print("Creating Participant object with ID:", participant_id)
