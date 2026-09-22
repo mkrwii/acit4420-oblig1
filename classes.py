@@ -32,7 +32,7 @@ class Observation:
 class Participant:
     def __init__(self, participant_id, name, ref_heart_rate, ref_skin_response, ref_temperature, ref_activity_level):
         self.participant_id = participant_id
-        self.name = name
+
         self.ref_heart_rate = ref_heart_rate
         self.ref_skin_response = ref_skin_response
         self.ref_temperature = ref_temperature
@@ -44,7 +44,7 @@ class Session:
     Stores the observations in a private list so that observations cannot be removed, but we are able to add new ones.
     '''
     def __init__(self, session_id, participant, start_time, end_time):
-        self.session = session_id
+        self.session_id = session_id
         self.participant = participant
         self.start_time = start_time
         self.end_time = end_time
@@ -149,3 +149,11 @@ def isDeclining(value1, value2, margin):
     '''
     decline = (value1 - value2) / value1
     return decline >= margin
+
+def printSessionReport(session, participant, result):
+    print(f"--- SESSION REPORT ---")
+    print(f"Participant id: {participant.participant_id}")
+    print(f"Session ID: {session.session_id}")
+    print(f"Usable Observations: {session.getNumberOfObservations()}")
+    print(f"Average Heart rate: {session.getAverageHeartRate()} (Baseline: {participant.ref_heart_rate})")
+    print(f"Classification: {result["classification"]}")

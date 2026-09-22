@@ -3,13 +3,13 @@ import data_generator as dg
 
 def main():
     # Pick a scenario (or use "random")
-    scenario = "poor_quality"
+    scenario = "random"
 
     # Generate dummy data
     profile, observations = dg.generate_fitness_data(
         participant_id="P123",
         scenario=scenario,
-        seed=48,
+        seed=2123,
         number_of_windows=12,
     )
 
@@ -60,6 +60,9 @@ def main():
     print("\n=== Classification Result ===")
     for key, value in result.items():
         print(f"{key}: {value}")
+
+        # --- Readable report ---
+    printSessionReport(session, participant, result)
 
 if __name__ == "__main__":
     main()
