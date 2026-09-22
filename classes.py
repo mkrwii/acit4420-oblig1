@@ -1,4 +1,7 @@
 class Observation:
+    '''
+    Checks for impossible values on object creation, as impossible data is unwanted.
+    '''
     def __init__(self, timestamp, heart_rate, skin_response, temperature, activity_level, signal_quality):
         if isinstance(timestamp, int) and timestamp >= 0:
             self.timestamp = timestamp
@@ -28,7 +31,6 @@ class Observation:
 
 class Participant:
     def __init__(self, participant_id, name, ref_heart_rate, ref_skin_response, ref_temperature, ref_activity_level):
-        print("Creating Participant object with ID:", participant_id)
         self.participant_id = participant_id
         self.name = name
         self.ref_heart_rate = ref_heart_rate
@@ -38,6 +40,9 @@ class Participant:
 
 
 class Session:
+    '''
+    Stores the observations in a private list so that observations cannot be removed, but we are able to add new ones.
+    '''
     def __init__(self, session_id, participant, start_time, end_time):
         self.session = session_id
         self.participant = participant
@@ -58,10 +63,14 @@ class Session:
 
 
 class SessionClassifier:
+    '''
+    Produces the classification, and handles 
+    '''
     MIN_OBSERVATIONS_VALID = 3 # The minimum amount of observations required to classify a session
     RECOVERY_MARGIN = 0.20 # The decline in heart rate that triggers a recovery classification
     HIGH_HEART_RATE = 0.40 # The percentage of the baseline heart rate that is the lower bounds of high heart rate
     MEDIUM_HEART_RATE = 0.15 # Similarly, the lower bounds of what is medium heart rate
+    MINIMUM_SIGNAL_QUALITY = 0.65 # An arbitrarily selected threshold for what is acceptable signal quality
 
     def __init__(self, session):
         self._session = session
@@ -69,8 +78,14 @@ class SessionClassifier:
         self.category = self.classify()
 
     def classify(self):
+        '''
+        core classification logic
+        '''
         if self._session.getNumberOfObservations() < self.MIN_OBSERVATIONS_VALID:
             self.reason = "FEW OBSERVATIONS"
+            return "INSUFFICIENT"
+        if findAverage([o.signal_quality for o in self._session.getObservations()]) < self.MINIMUM_SIGNAL_QUALITY:
+            self.reason = "BAD DATA QUALITY"
             return "INSUFFICIENT"
         elif self._isRecovering():
             self.reason = "DECLINING HEART RATE"
@@ -86,6 +101,9 @@ class SessionClassifier:
             return "RESTING"
         
     def getResult(self):
+        '''
+        outputs a dictionary with the results, as specified in the assignment
+        '''
         return{
             "classification": self.category,
             "reason": self.reason,
@@ -95,19 +113,39 @@ class SessionClassifier:
     
     @staticmethod
     def _isAboveBaseline(value, baseline, margin):
+        '''
+        determines if a value is over a threshold margin given a baseline
+        static because it does not need the object itself to calculate
+        '''
         return value > baseline * (1 + margin)
     
     def _isRecovering(self):
+        '''
+        Determines recovery sessions by finding out if the heart rate on average is higher in the first half of the session than in the second half.
+        '''
         observations = self._session.getObservations()
         if len(observations) < self.MIN_OBSERVATIONS_VALID:
             return False
         mid = len(observations) // 2
         first_half = observations[:mid]
         second_half = observations[mid:]
-        first_avg = sum(o.heart_rate for o in first_half) /len(first_half)
-        second_avg = sum(o.heart_rate for o in second_half) /len(second_half)
-        decline = (first_avg - second_avg) / first_avg
-        return decline >= self.RECOVERY_MARGIN
+        first_avg = findAverage([o.heart_rate for o in first_half])
+        second_avg = findAverage([o.heart_rate for o in second_half])
+        return isDeclining(first_avg, second_avg, self.RECOVERY_MARGIN)
 
 
-    
+# standalone functions
+
+def findAverage(values):
+    '''
+    helper function to find the average of values
+    '''
+    return sum(values) /len(values)
+
+
+def isDeclining(value1, value2, margin):
+    '''
+    determines if there is a notable decline between two values, with a margin offset.
+    '''
+    decline = (value1 - value2) / value1
+    return decline >= margin
