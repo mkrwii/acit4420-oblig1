@@ -8,6 +8,8 @@ The file data_generator.py is not my work, and is included for convenience. The 
 Description:
 This application uses Python OOP to structure, classify and present exercise data. The classes are defined in classes.py, where most of the logic is handled. tests.py and main.py provide two different ways of running the program. Synthetic data is provided by the data generator (see the above disclaimer), and processed as a shared service for main and tests in sample_data.py
 
+The project does not use external libraries, and the provided requirements.txt is thus empty.
+
 Class design and responsibilities:
 All classes contained in classes.py
 Participant: Plain class representing the participant and their reference values
