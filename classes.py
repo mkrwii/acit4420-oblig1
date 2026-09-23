@@ -184,18 +184,18 @@ def printSessionReport(session, participant, result):
     print(f"Participant id: {participant.participant_id}")
     print(f"Session ID: {session.session_id}")
     print(f"Usable Observations: {session.getNumberOfObservations()}")
-    print(f"Average Heart rate: {session.getAverageHeartRate()} (Baseline: {participant.ref_heart_rate})")
-    print(f"Skin response: {result['skin_response']} (Baseline: {participant.ref_skin_response})")
-    print(f"Temperature: {result['temperature']} (Baseline: {participant.ref_temperature})")
+    print(f"Average Heart rate: {session.getAverageHeartRate()} (Reference: {participant.ref_heart_rate})")
+    print(f"Skin response: {result['skin_response']} (Reference: {participant.ref_skin_response})")
+    print(f"Temperature: {result['temperature']} (Reference: {participant.ref_temperature})")
     print(f"Classification: {result["classification"]}")
     
 def printParticipantData(participant):
     '''
-    prints the participant data in a readable format
+    prints the participant's data in a readable format
     '''
     print(f"--- PARTICIPANT DATA ---")
     print(f"Participant id: {participant.participant_id}")
-    print(f"Baseline Heart rate: {participant.ref_heart_rate}")
-    print(f"Baseline Skin response: {participant.ref_skin_response}")
-    print(f"Baseline Temperature: {participant.ref_temperature}")
-    print(f"Baseline Activity level: {participant.ref_activity_level}")
+    print(f"Reference Heart rate: {participant.ref_heart_rate}")
+    print(f"Reference Skin response: {participant.ref_skin_response}")
+    print(f"Reference Temperature: {participant.ref_temperature}")
+    print(f"Reference Activity level: {participant.ref_activity_level}")
