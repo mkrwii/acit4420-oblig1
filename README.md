@@ -1,9 +1,12 @@
 ACIT4420 - assignment 1
-Project title: WIP
+Project title: Fitness Data Analysis Application
 Chosen alternative: A
 Student: Magnus K Wiik
 Student no: 374992
-Description: WIP
+Disclaimer:
+The file data_generator.py is not my work, and is included for convenience. The file was handed out on Canvas.
+Description:
+This application uses Python OOP to structure, classify and present exercise data. The classes are defined in classes.py, where most of the logic is handled. tests.py and main.py provide two different ways of running the program. Synthetic data is provided by the data generator (see the above disclaimer), and processed as a shared service for main and tests in sample_data.py
 
 Class design and responsibilities:
 All classes contained in classes.py
@@ -21,7 +24,23 @@ The primary assumption is that heart rate is the primary indicator for how hard 
 
 Exact installation and running instructions:
 install: `git clone github.com/mkrwii/acit4420-oblig1`
-running: To see the report outputs of the five scenarios, run `python3 main.py`. To run the tests to see how it aligns with the generated data, run `python3 test.py`
+running: To see the report outputs of the five scenarios, run `python3 main.py`. To run the tests to see how it aligns with the generated data, run `python3 tests.py`
 
-Example output: WIP
-Known limitations: WIP
+Example output:
+--- PARTICIPANT DATA ---
+Participant id: P123
+Baseline Heart rate: 65
+Baseline Skin response: 1.75
+Baseline Temperature: 32.72
+Baseline Activity level: 0.2
+--- SESSION REPORT ---
+Participant id: P123
+Session ID: S-3
+Usable Observations: 12
+Average Heart rate: 125.0 (Baseline: 65)
+Skin response: HIGH (Baseline: 1.75)
+Temperature: HIGH (Baseline: 32.72)
+Classification: HIGH
+
+Known limitations:
+The classification is not quite 100% accurate, and very rarely, a scenario that the data generator sees as "high" will be classified as "medium". However, the current tuning of the threshold values makes this a very rare occurrence.
