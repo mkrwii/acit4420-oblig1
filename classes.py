@@ -30,9 +30,8 @@ class Observation:
 
 
 class Participant:
-    def __init__(self, participant_id, name, ref_heart_rate, ref_skin_response, ref_temperature, ref_activity_level):
+    def __init__(self, participant_id, ref_heart_rate, ref_skin_response, ref_temperature, ref_activity_level):
         self.participant_id = participant_id
-
         self.ref_heart_rate = ref_heart_rate
         self.ref_skin_response = ref_skin_response
         self.ref_temperature = ref_temperature
@@ -68,8 +67,8 @@ class SessionClassifier:
     '''
     MIN_OBSERVATIONS_VALID = 3 # The minimum amount of observations required to classify a session
     RECOVERY_MARGIN = 0.20 # The decline in heart rate that triggers a recovery classification
-    HIGH_HEART_RATE = 0.40 # The percentage of the baseline heart rate that is the lower bounds of high heart rate
-    MEDIUM_HEART_RATE = 0.15 # Similarly, the lower bounds of what is medium heart rate
+    HIGH_HEART_RATE = 0.50 # The percentage of the baseline heart rate that is the lower bounds of high heart rate
+    MEDIUM_HEART_RATE = 0.20 # Similarly, the lower bounds of what is medium heart rate
     MINIMUM_SIGNAL_QUALITY = 0.65 # An arbitrarily selected threshold for what is acceptable signal quality
 
     def __init__(self, session):
@@ -145,15 +144,29 @@ def findAverage(values):
 
 def isDeclining(value1, value2, margin):
     '''
-    determines if there is a notable decline between two values, with a margin offset.
+    helper function that determines if there is a notable decline between two values, with a margin offset.
     '''
     decline = (value1 - value2) / value1
     return decline >= margin
 
 def printSessionReport(session, participant, result):
+    '''
+    prints a session as a readable report
+    '''
     print(f"--- SESSION REPORT ---")
     print(f"Participant id: {participant.participant_id}")
     print(f"Session ID: {session.session_id}")
     print(f"Usable Observations: {session.getNumberOfObservations()}")
     print(f"Average Heart rate: {session.getAverageHeartRate()} (Baseline: {participant.ref_heart_rate})")
     print(f"Classification: {result["classification"]}")
+    
+def printParticipantData(participant):
+    '''
+    prints the participant data in a readable format
+    '''
+    print(f"--- PARTICIPANT DATA ---")
+    print(f"Participant id: {participant.participant_id}")
+    print(f"Baseline Heart rate: {participant.ref_heart_rate}")
+    print(f"Baseline Skin response: {participant.ref_skin_response}")
+    print(f"Baseline Temperature: {participant.ref_temperature}")
+    print(f"Baseline Activity level: {participant.ref_activity_level}")

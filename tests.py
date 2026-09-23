@@ -1,33 +1,25 @@
 import data_generator as dg
+import sample_data as sd
 from classes import *
 
 scenarios = dg.available_scenarios()
 
+
+SCENARIO_TO_EXPECTED_CLASSIFICATION = {
+    #maps the data generators scenarios to the expected classification results
+    "resting": "RESTING",
+    "moderate_activity": "MEDIUM",
+    "high_activity": "HIGH",
+    "recovery": "RECOVERY",
+    "poor_quality": "INSUFFICIENT",
+}
+
 def test():
-    for scenario in scenarios:
-        run_scenario(scenario)
-
-def run_scenario(scenario):
-    print(f"Running scenario: {scenario}")
-    profile, observations = dg.generate_fitness_data(
-        participant_id="P123",
-        scenario=scenario,
-        seed=2123,
-        number_of_windows=12,
-    )
-
-    print("\n=== Participant Profile ===")
-    for key, value in profile.items():
-        print(f"{key}: {value}")
-
-        clean_observations = []
-
-    for obs in observations:
-        try:
-            obs = Observation(**obs)   # map dict → object
-            clean_observations.append(obs)
-        except ValueError as e:
-            print(e)
+    for scenario, expected in SCENARIO_TO_EXPECTED_CLASSIFICATION.items():
+        participant, session = sd.getScenarioData(scenario)
+        result = SessionClassifier(session).getResult()
+        assert result["classification"] == expected, f"{scenario}: expected {expected}, got {result['classification']}"
+        print(f"PASS: {scenario} -> {result['classification']}")
 
 if __name__ == "__main__":
     test()
