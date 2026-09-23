@@ -22,5 +22,5 @@ def test():
         print(f"PASS: {scenario} -> {result['classification']}")
 
 if __name__ == "__main__":
+    print("--- Runnning tests with random seeds for all five scenarios: ---")
     test()
-    print("Hello from tests.py!")

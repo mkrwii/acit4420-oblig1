@@ -75,6 +75,28 @@ class SessionClassifier:
         self._session = session
         self._participant = session.participant
         self.category = self.classify()
+        self.temperature = self.classifyTemperature()
+        self.skinresponse = self.classifySkinResponse()
+        
+    def classifyTemperature(self):
+        ref = self._participant.ref_temperature
+        avg_temp = findAverage([o.temperature for o in self._session.getObservations()])
+        if avg_temp is None:
+            return "INSUFFICIENT"
+        if avg_temp > ref: 
+            return "HIGH"
+        elif avg_temp < ref:
+            return "NORMAL"
+    
+    def classifySkinResponse(self):
+        ref = self._participant.ref_skin_response
+        avg_skin = findAverage([o.skin_response for o in self._session.getObservations()])
+        if avg_skin is None:
+            return "INSUFFICIENT"
+        if avg_skin > ref: 
+            return "HIGH"
+        elif avg_skin < ref:
+            return "NORMAL"
 
     def classify(self):
         '''
@@ -107,7 +129,9 @@ class SessionClassifier:
             "classification": self.category,
             "reason": self.reason,
             "usable_observations": self._session.getNumberOfObservations(),
-            "avg_heart_rate": self._session.getAverageHeartRate()
+            "avg_heart_rate": self._session.getAverageHeartRate(),
+            "skin_response": self.skinresponse,
+            "temperature": self.temperature
         }
     
     @staticmethod
@@ -139,7 +163,10 @@ def findAverage(values):
     '''
     helper function to find the average of values
     '''
-    return sum(values) /len(values)
+    if len(values) > 0:
+        return sum(values) /len(values)
+    else:
+        return None
 
 
 def isDeclining(value1, value2, margin):
@@ -158,6 +185,8 @@ def printSessionReport(session, participant, result):
     print(f"Session ID: {session.session_id}")
     print(f"Usable Observations: {session.getNumberOfObservations()}")
     print(f"Average Heart rate: {session.getAverageHeartRate()} (Baseline: {participant.ref_heart_rate})")
+    print(f"Skin response: {result['skin_response']} (Baseline: {participant.ref_skin_response})")
+    print(f"Temperature: {result['temperature']} (Baseline: {participant.ref_temperature})")
     print(f"Classification: {result["classification"]}")
     
 def printParticipantData(participant):
